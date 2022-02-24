@@ -1,109 +1,284 @@
-// let obj = require("../loggerfolder/logger.js")
-// let obj2 = require("../util/helper.js")
-// let obj3= require("../lodasH/lodasH.js")
-// let obj4= require("../oddNumber/oddNumber.js")
-// let obj5= require("../unioN/unioN.js")
-// let obj6= require("../fromPair/frompair.js")
 
-//const express = require('express');
-//const res = require('express/lib/response');
-//const router = express.Router();
+//23feb 1st problem
+//1Write a POST /players api that creates a new player 
+//( that saves a player’s details and doesn’t allow saving the data of a player with a name that already exists in the data)
 
-// router.get('/test-me', function (req, res) {
-//     obj.welcome("thorium")
-//     console.log(obj.endpoint)
-//     res.send('Welcome to my application')
-//     res.send(obj.endpoint)
-//     obj2.printDate("Today is 21st feb")
-//     obj2.printMonth("Month is February")
-//     obj2.getBatchInfo("Thorium, W3D1, the topic for today is Nodejs module system")
-
-//     res.send('Welcome to my application')
-
-    
-// });
-   //module.exports = router;
-
-// router.get('/hello', function (req, res){
-
-// //res.send(obj3.months)
-// //res.send(obj4.myArray)
-// //res.send(obj5.myArray2)
-// //res.send(obj6.pairs2)
-
-// });
-
-const express = require('express');
-const router = express.Router();
-//const res = require('express/lib/response');
-//1. This API will fetch all movies from the array
-
-router.get('/movies',function(req, res)
-{
-    res.send('["Fukrey", "Delhi", "Dabang","Rockstar", "Suryavanshi"]')
-});
-
-//2 this API will fetch all movie by index id from array
-router.get('/moviez/:idMovie', function(req,res){
-    let mov= ["Fukrey", "Delhi", "Dabang","Rockstar", "Suryavanshi"]
-    let value=req.params.idMovie;
-    if (value>mov.length-1) {
-        res.send("this movie doesn't exit")
-    } else {
-        res.send(mov[value])
+    const express = require('express');
+    const router = express.Router();
+    let arr=[
+        {
+            "name": "manish",
+            "dob": "1/1/1995",
+              "gender": "male",
+             "city": "jalandhar",
+             "sports": [
+               "swimming"
+                      ],
+                      "bookings": [
+          { 
+              "bookingNumber":1,
+              "sportId": "",
+              "centerId":"",
+              "type": "private",
+              "slot": "16286598000000",
+               "bookedOn": "31/08/2021",
+               "bookedFor":"01/09/2021"
+          },
+            
+          { 
+            "bookingNumber":2,
+            "sportId": "",
+            "centerId":"",
+            "type": "private",
+            "slot": "16286598000001",
+             "bookedOn": "31/08/2021",
+             "bookedFor":"01/09/2021"
+            }
+           ]
+          
+          },
         
+        {
+        
+            "name": "sachin",
+          
+            "dob": "2/1/1993",
+          
+            "gender": "male",
+          
+            "city": "chandigarh",
+          
+            "sports": [
+          
+              "swimming"
+          
+            ],
+          
+            "bookings": [
+          { 
+              "bookingNumber":1,
+              "sportId": "",
+              "centerId":"",
+              "type": "private",
+              "slot": "16286598000000",
+               "bookedOn": "31/08/2021",
+               "bookedFor":"01/09/2021"
+          },
+            
+          { 
+            "bookingNumber":2,
+            "sportId": "",
+            "centerId":"",
+            "type": "private",
+            "slot": "16286598000001",
+             "bookedOn": "31/08/2021",
+             "bookedFor":"01/09/2021"
+            }
+           ]
+          
+          },
+    ]
+    
+    router.post('/player', function (req, res) {
+      
+        let details = req.body.name1.name
+        let inputDetails = req.body.name1
+        for (let i = 0; i < arr.length; i++) {
+        if (details === arr[i].name) {
+       
+        res.send("Data already exist")
+        }
+        else
+          {
+        arr.push( inputDetails )
+        res.send({arr})
+        }
+        }
+
+    })
+    
+
+    module.exports = router;
+
+
+
+
+   // 23 feb second problem  
+  //  Write an api that books a slot for a player with relevant details. The api looks like POST /players/:playerName/bookings/:bookingId
+  //  Ensure the below conditions:
+     //  1. PlayerName and bookingId are path params You have to ensure the playerName received must exist in the players collection. If the playerName doesn’t exist in the players collection return an error message that says something relevant about player not being found. 
+     //  2. For a valid playerName check if the bookingId is already present in the player’s booking. Again, for a repeated bookingId send an error message conveying the booking was already processed. For a relevant bookingId(which is new), add the booking object from request body to bookings array.
+  //  NOTE: you must create the players array outside( on the top ) of the api( so that data is maintained across api hits
+  const express = require('express');
+  const router = express.Router();
+  let players=[
+        {
+            "name": "manish",
+            "dob": "1/1/1995",
+              "gender": "male",
+             "city": "jalandhar",
+             "sports": [
+               "swimming"
+                      ],
+                      "bookings": [
+          { 
+              "bookingNumber":1,
+              "sportId": "",
+              "centerId":"",
+              "type": "private",
+              "slot": "16286598000000",
+               "bookedOn": "31/08/2021",
+               "bookedFor":"01/09/2021"
+          },
+            
+          { 
+            "bookingNumber":2,
+            "sportId": "",
+            "centerId":"",
+            "type": "private",
+            "slot": "16286598000001",
+             "bookedOn": "31/08/2021",
+             "bookedFor":"01/09/2021"
+            }
+           ]
+          
+          },
+        
+        {
+        
+            "name": "sachin",
+          
+            "dob": "2/1/1993",
+          
+            "gender": "male",
+          
+            "city": "chandigarh",
+          
+            "sports": [
+          
+              "swimming"
+          
+            ],
+          
+            "bookings": [
+          { 
+              "bookingNumber":1,
+              "sportId": "",
+              "centerId":"",
+              "type": "private",
+              "slot": "16286598000000",
+               "bookedOn": "31/08/2021",
+               "bookedFor":"01/09/2021"
+          },
+            
+          { 
+            "bookingNumber":2,
+            "sportId": "",
+            "centerId":"",
+            "type": "private",
+            "slot": "16286598000001",
+             "bookedOn": "31/08/2021",
+             "bookedFor":"01/09/2021"
+            }
+           ]
+          
+          },
+    ]
+   router.post('/players/:playerName/bookings/:bookingId', function (req, res) {
+  let name= req.params.playerName
+  let isPlayPresent=false
+    for(let i=0;i<player.length;i++){
+   if (players[i].name==name){
+     isPlayPresent=true
+   }
+   if(!isPlayPresent){
+     res.send("Players not found")
+   }
+   let booking=req.body
+   let bookingId=req.params.bookingId
+   for(i=0; i<players.length; i++){
+     if(players[i].name==name)
+     {
+       for(let j=0;j<players[i].bookings.length;j++){
+     if(players[i].bookings[j].bookingNumber==bookingId){
+     res.send("bookingId already present in bookings")
+
+     }
+       }
+       players[i].bookings.push(booking)
+     }
+   }
+ res.send({})
     }
 
-});
 
 
-//3 this API will fetch array of objects
-router.get('/films', function (req, res) {
-    let movies = [{
-        id: 1,
-        name: 'The Shining'
-       }, {
-        id: 2,
-        name: 'Incendies'
-       }, {
-        id: 3,
-        name: 'Rang de Basanti'
-       }, {
-        id: 4,
-        name: 'Finding Demo'
-       }];
-    res.send(movies);
-});
-// 4 this API will fetch array
-// andif index is greater than the valid maximum value a message is returned that tells the user to use a valid index in an error message.
-router.get('/films/:filmId', function (req, res) {
-    let movies = [{
-        id: 1,
-        name: 'The Shining'
-       }, {
-        id: 2,
-        name: 'Incendies'
-       }, {
-        id: 3,
-        name: 'Rang de Basanti'
-       }, {
-        id: 4,
-        name: 'Finding Demo'
-       }];
-       let flag = 0;
-       let id = req.params.filmId;
-       for (let i=0; i<movies.length; i++){
-           if (id == movies[i].id){
-            res.send(movies[i]);
-            flag = 1;
-            break;
-           }
-       }
-       if (flag == 0)
-           res.send("No movie exists with this id.");
-    res.send(movies);
-});
+players
+   })
+   module.exports = router;
+       
 
+//     ASSIGNMENT: 24feb/2022
+// you will be given an array of persons ( i.e an array of objects )..each person will have a {name: String , age: Number, votingStatus: true/false(Boolean)}
+// take input in query param as votingAge..and for all the people above that age, change votingStatus as true
+// also return an array consisting of only the person that can vote
+ 
+ //take this as sample for array of persons:
+
+ const express = require('express');
+const router = express.Router();
+let persons= [
+ {
+ name: "PK",
+ age: 10,
+ votingStatus: false
+},
+{
+ name: "SK",
+ age: 20,
+ votingStatus: false
+},
+{
+ name: "AA",
+ age: 70,
+ votingStatus: false
+},
+{
+ name: "SC",
+ age: 5,
+ votingStatus: false
+},
+{
+ name: "HO",
+ age: 40,
+ votingStatus: false
+}
+]
+router.post('/post-queryAssignment', function (req, res) {
+let age1=req.query.votingAge
+
+let newPerson=[]
+for(let i=0; i<persons.length; i++)
+
+{
+  if (persons[i].age>=age1)
+
+{
+  persons[i].votingStatus=true;
+  newPerson.push(persons[i])
+  
+}
+else{
+  res.send({votingStatus:false})
+}
+}
+
+res.send({newPerson})
+})
 module.exports = router;
+
+      
+
+
 
 
