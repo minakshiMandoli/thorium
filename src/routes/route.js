@@ -98,7 +98,7 @@
     })
     
 
-    module.exports = router;
+    //module.exports = router;
 
 
 
@@ -109,8 +109,8 @@
      //  1. PlayerName and bookingId are path params You have to ensure the playerName received must exist in the players collection. If the playerName doesn’t exist in the players collection return an error message that says something relevant about player not being found. 
      //  2. For a valid playerName check if the bookingId is already present in the player’s booking. Again, for a repeated bookingId send an error message conveying the booking was already processed. For a relevant bookingId(which is new), add the booking object from request body to bookings array.
   //  NOTE: you must create the players array outside( on the top ) of the api( so that data is maintained across api hits
-  const express = require('express');
-  const router = express.Router();
+  // const express = require('express');
+  // const router = express.Router();
   let players=[
         {
             "name": "manish",
@@ -215,7 +215,7 @@
 
 players
    })
-   module.exports = router;
+   //odule.exports = router;
        
 
 //     ASSIGNMENT: 24feb/2022
@@ -225,8 +225,8 @@ players
  
  //take this as sample for array of persons:
 
- const express = require('express');
-const router = express.Router();
+//  const express = require('express');
+// const router = express.Router();
 let persons= [
  {
  name: "PK",
