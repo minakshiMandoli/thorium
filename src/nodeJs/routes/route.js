@@ -209,12 +209,12 @@
        players[i].bookings.push(booking)
      }
    }
- res.send({})
+ res.send({players})
     }
 
 
 
-players
+
    })
    module.exports = router;
        
