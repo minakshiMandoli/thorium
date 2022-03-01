@@ -5,7 +5,7 @@ const bookSchema = new mongoose.Schema( {
     bookName: {
         type: String,
         required: true,
-        unique:true
+        
     },
     authorName: {
         type: String,
@@ -13,7 +13,7 @@ const bookSchema = new mongoose.Schema( {
     },
     publicationYear: { 
         type: Date,
-        default: 2021
+        default: Date.now
 
     },
     tags:[String],
