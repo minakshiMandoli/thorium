@@ -1,30 +1,14 @@
-//const { stubString } = require('lodash');
-const mongoose = require('mongoose');
-//const { required } = require('nodemon/lib/config');
+const mongoose = require('mongoose')
 
-const bookSchema = new mongoose.Schema( {
-    bookName: {
-        type: String,
-        required: true,
-    
-    },
-    authorName: {
-        type: String,
+const bookSchema = new mongoose.Schema({
+    name: String,
+    author_id : {
+        type:Number,
         required: true
     },
-    price: {
-        indianPrice: String,
-        europePrice: String,
-    },
-    publicationYear: {type:Date, default:2021},
-    tags:[String],
-    totalPages: {type:Number},
-    isStockAvailable:{type:Boolean}
-
+    price : Number,
+    rating : Number
 },
- { timestamps: true });
+{timestamps:true})
 
-module.exports = mongoose.model('Book', bookSchema) //books
-
-
-
+module.exports = mongoose.model('Book',bookSchema)
