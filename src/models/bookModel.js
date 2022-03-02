@@ -1,15 +1,27 @@
 const mongoose = require('mongoose');
+//const { required } = require('nodemon/lib/config');
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const bookSchema = new mongoose.Schema( {
-    name: String,
-    author_id: {
-        type: ObjectId,
-        ref: "Author"
-    },
-    price: Number,
-    ratings: Number
 
+    _id: {
+        type: ObjectId,
+        
+    },
+    book_name: String,
+    author_id:{
+        type: ObjectId,
+        ref: "Author",
+        required: true
+    },
+    ratings: Number,
+    price: Number,
+    publisher_id: {
+        type: ObjectId,
+        ref: "Publisher",
+        required: true
+    }
+   
 
 }, { timestamps: true });
 
