@@ -3,7 +3,7 @@
 const BookModel= require("../models/bookModel")
 const AuthorModel= require("../models/authorModel")
 const PublisherModel= require("../models/publisherModel")
-const publisherModel = require("../models/publisherModel")
+
 
 
 
@@ -28,12 +28,12 @@ const createBook= async function (req, res) {
         if(!book.publisher_id){
             return res.send(" Enter Publisher ID ")
         }
-            const isValid1= await AuthorModel.findOne({_id: book.author_id })
+            const isValid1= await AuthorModel.findById(_book.author_id )
             if(!isValid1){
                 return  res.send(" Auther Id is not valid")
                }
             
-            const isValid2=  await PublisherModel.findOne({_id: book.publisher_id })            
+            const isValid2=  await PublisherModel.findById(_book.publisher_id )            
             
           if(!isValid2){
            return res.send(" Publisher Id is not valid")
@@ -44,7 +44,7 @@ const createBook= async function (req, res) {
     res.send({data: bookCreated})
 }
 const getBooksWithAuthorDetails = async function (req, res) {
-        let specificBook = await BookModel.find().populate('author_id').populate('publisher_id')
+        let specificBook = await BookModel.find().populate('author_id  publisher_id')
         res.send({data: specificBook})
 }
 

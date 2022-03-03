@@ -5,9 +5,7 @@ const router = express.Router();
 const AllController= require("../controllers/allController")
 
 
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+
 
 router.post("/createAuthor", AllController.createAuthor  )
 router.post("/createPublisher", AllController.createPublisher  )
