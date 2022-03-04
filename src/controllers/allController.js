@@ -52,11 +52,9 @@ const getBooksWithAuthorDetails = async function (req, res) {
 }
 
 const putBooks= async function(req, res) {
-  let a=  await PublisherModel.find({publisher_name:{$eq:["SHarperCollins","Penguin," ]}}.select({_id:1}))
-   let b= await BookModel.updateMany({publisher_name:{$in:a}},
-    {$set:{isHardcover:true}})
+  let bookUpdated = await BookModel.updateMany({$or:[{"publisher_id":"6220f3a460e150ebec76fd2e"},{ "publisher_id":  "6220f43360e150ebec76fd36"}]},{"isHardCover":true})
         
-    res.send("hardCover set to true")
+    res.send({data: bookUpdated})
 }
 
 const changeBookPrice =async function(req, res) {
