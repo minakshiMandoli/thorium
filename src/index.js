@@ -15,6 +15,22 @@ mongoose.connect("mongodb+srv://functionup-cohort:G0Loxqc9wFEGyEeJ@cluster0.rzot
 .catch ( err => console.log(err) )
 
 app.use('/', route);
+// app.use((req,res,next) => {
+//     console.log(" ")
+    
+//     next();
+//})
+
+const requestTime = function (req, res, next) {
+    const event1 = new Date();
+     const ip=req.connection.remoteAddress;
+     const route= req.path
+    console.log(event1, ip, route);
+    
+    next()
+  }
+  app.use(requestTime)
+
 
 
 app.listen(process.env.PORT || 3000, function () {
