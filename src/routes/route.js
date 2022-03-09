@@ -16,4 +16,5 @@ router.get("/getUserData/:userId",MiddleWare.mid1, userController.getUserData)
 
 router.put("/updateUser/:userId",MiddleWare.mid1, userController.updateUser)
 router.delete("/deleteUser/:userId", MiddleWare.mid1,userController.deleteUser)
+//router.post("/user/:userId/posts",MiddleWare.mid1,userController.postMessage)
 module.exports = router;

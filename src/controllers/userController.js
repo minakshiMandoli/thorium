@@ -29,8 +29,8 @@ const loginUser = async function (req, res) {
  let token = jwt.sign(
      {
        userId: user._id.toString(),
-       batch: "thorium",      
-        organisation: "FUnctionUp",
+       //batch: "thorium",      
+        //organisation: "FUnctionUp",
     },
     "functionup-thorium"
   );
@@ -77,8 +77,23 @@ let deletedUser=await userModel.findByIdAndUpdate( {_id:userId}, {isDeleted:"tru
 res.send({status:deletedUser});
 
 }
+
+const postMessage = async function (req, res) {
+  let message=req.body.message
+  let userId = req.params.userId;
+ let user= await userModel.findById(userId)
+ if (!user) {
+  return res.send("No such user exists");
+} 
+let updatedPost=user.post
+updatedPost.push(message);
+let updatedUser=await userModel.findByIdAndUpdate({_id:userId},{post:updatedPost},{new:true})
+res.send({status:true, data:updatedUser})
+}
+
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
 module.exports.deleteUser= deleteUser;
+module.exports.postMessage=postMessage;
