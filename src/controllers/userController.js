@@ -1,12 +1,23 @@
+const res = require("express/lib/response");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
-const createUser = async function (req,res) {
-  let data = req.body;
-  let registerUser = await userModel.create(data);
-  
-res.send({ msg: registerUser });
+const createUser = async function (req, res) {
+  try {
+    let data = req.body;
+    if (Object.keys(data).length != 0) {
+      let registerUser = await userModel.create(data);
+      res.status(201).send({ msg: registerUser });
+    }
+    else
+      res.status(400).send({ msg: "BAD REQUEST" });
+  }
+  catch (error) {
+    res.status(500).send({ msg: error.message });
+  }
 };
+
+
 
 const loginUser = async function (req, res) {
   let userName = req.body.emailId;
@@ -18,7 +29,7 @@ const loginUser = async function (req, res) {
       status: false,
       msg: "username or the password is not corerct",
     });
-  
+
 
   // Once the login is successful, create the jwt token with sign function
   // Sign function has 2 inputs:
@@ -26,17 +37,17 @@ const loginUser = async function (req, res) {
   // The decision about what data to put in token depends on the business requirement
   // Input 2 is the secret
   // The same secret will be used to decode tokens
- let token = jwt.sign(
-     {
-       userId: user._id.toString(),
-       //batch: "thorium",      
-        //organisation: "FUnctionUp",
+  let token = jwt.sign(
+    {
+      userId: user._id.toString(),
+      //batch: "thorium",      
+      //organisation: "FUnctionUp",
     },
     "functionup-thorium"
   );
   res.setHeader("x-auth-token", token);
   res.send({ status: true, data: token });
- };
+};
 
 const getUserData = async function (req, res) {
 
@@ -70,30 +81,36 @@ const updateUser = async function (req, res) {
   res.send({ status: updatedUser, data: updatedUser });
 };
 
- const deleteUser= async function (req, res) {
-  
+const deleteUser = async function (req, res) {
+
   let userId = req.params.userId
-let deletedUser=await userModel.findByIdAndUpdate( {_id:userId}, {isDeleted:"true"});
-res.send({status:deletedUser});
+  let deletedUser = await userModel.findByIdAndUpdate({ _id: userId }, { isDeleted: "true" });
+  res.send({ status: deletedUser });
 
 }
 
 const postMessage = async function (req, res) {
-  let message=req.body.message
+  try{
+  let message = req.body.message
   let userId = req.params.userId;
- let user= await userModel.findById(userId)
- if (!user) {
-  return res.send("No such user exists");
-} 
-let updatedPost=user.post
-updatedPost.push(message);
-let updatedUser=await userModel.findByIdAndUpdate({_id:userId},{post:updatedPost},{new:true})
-res.send({status:true, data:updatedUser})
+  let user = await userModel.findById(userId)
+  if (!user) {
+    return res.send("No such user exists");
+  }
+  let updatedPost = user.post
+  updatedPost.push(message);
+  let updatedUser = await userModel.findByIdAndUpdate({ _id: userId }, { post: updatedPost }, { new: true })
+  res.send({ status: true, data: updatedUser })
 }
+catch(error){
+  res.status(500).send({ msg: error.message });
+}
+}
+
 
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
-module.exports.deleteUser= deleteUser;
-module.exports.postMessage=postMessage;
+module.exports.deleteUser = deleteUser;
+module.exports.postMessage = postMessage;
