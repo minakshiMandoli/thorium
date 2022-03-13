@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 //const { required } = require('nodemon/lib/config');
 
-const bookSchema = new mongoose.Schema( {
+const newBook = new mongoose.Schema( {
     bookName: {
         type: String,
         required: true,
@@ -24,7 +24,7 @@ const bookSchema = new mongoose.Schema( {
 },
  { timestamps: true });
 
-module.exports = mongoose.model('Book', bookSchema) //books
+module.exports = mongoose.model('Book', newBook) //books
 
 
 
