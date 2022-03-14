@@ -1,6 +1,13 @@
 # Project1
 Blogging 
 
+<<<<<<< HEAD
+// Branch to work on project1-blogging
+// repo to push to  https://github.com/fractal1111/Project1.git
+// db String mongodb+srv://Parth1111:a5xZnL6DVS-c-!7@cluster0.9doof.mongodb.net/project1?retryWrites=true&w=majority
+
+
+=======
 
 # Thorium
 Repository for backend cohort - Thorium
@@ -131,3 +138,4 @@ Refer below sample
 #### Refer https://jsonplaceholder.typicode.com/guide/ for some fake blogs data.
 
 #### Note: Create a group database and use the same database in connection string by replacing `groupXDatabase
+>>>>>>> 16b700ab1ce69935cfa732ea7a8f1e595f91f4d9
