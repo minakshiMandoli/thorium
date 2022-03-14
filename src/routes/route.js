@@ -1,31 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const CowinController = require('../controllers/cowinController')
-const WeatherController = require('../controllers/weatherController')
-const MemeController = require('../controllers/memeController')
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Schema.Types.ObjectId
+const authorController = require('../controllers/authorController')
+const blogController = require('../controllers/blogController')
 
+router.post("/createAuthor",authorController.createAuthor)
+router.post("/createBlog",blogController.createBlog)
 
+router.get("/blog", blogController.getBlog)
 
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
+router.put("/blogs1/:blogId", blogController.updateBlog)
 
-router.get("/cowin/states", CowinController.getStates)
-router.get("/cowin/getByState/:stateId", CowinController.getByState)
-router.get("/cowin/getByPin", CowinController.getByPin)
+router.delete("/blogs/:blogsId", blogController.deleteBlogById)
+router.delete("/deleteBlogs", blogController.deletedByQueryParams)
 
-
-// GETOTP and vaccine sessions by district APIs
-router.post('/getOtp', CowinController.getOtp )
-router.get('/sessionsByDistrict', CowinController.sessionsByDistrict)
-
-// getWeather, tempOfLondon, tempOfCities
-router.get('/getWeather', WeatherController.getWeather)
-router.get('/tempOfLondon', WeatherController.tempOfLondon)
-router.get('/tempOfCities', WeatherController.tempOfCities)
-
-// 
-router.get('/getMemes', MemeController.getMemes )
-router.post('/createMemes', MemeController.createMemes)
 
 module.exports = router;

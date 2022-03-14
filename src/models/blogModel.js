@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.types.ObjectId
+const ObjectId = mongoose.Schema.Types.ObjectId
 
 const blogSchema = new mongoose.Schema({
 
     title: {
+        type:String,
         required: true
     },
     body: { 
@@ -15,24 +16,30 @@ const blogSchema = new mongoose.Schema({
         required: true,
         ref: "authorModel"
     },
-    tags: {type:[]},
+    tags: {
+        type:[String]
+    },
     category: {
-        type: [],
+        type: [String],
         required: true,
        // enum: ["technology", "entertainment", " lifestyle", "food", "fashion"]
     },
     subcategory: {
-        type: [],
+        type: [String],
      //   enum:  ["web development", "mobile development", "AI", "ML"]
     },
     isDeleted: {
-        type: boolean,
+        type: Boolean,
         default: false
     },
     isPublished: {
-        type: boolean,
+        type: Boolean,
          default: false
-         }
+         },
+    publishedAt:{
+        type:Date,
+        default: Date.now()
+    }
 
 }, { timestamps: true })
 
