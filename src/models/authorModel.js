@@ -16,9 +16,9 @@ const authorSchema = new mongoose.Schema( {
         valid: email,
         unique:true
     },
-     password: {mandatory} ,
-     {timestamp:true}
+     password: {mandatory},
+     timestamp:true}
 
-    });
+    );
 
     module.exports = mongoose.model('authorModel', authorSchema)
