@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+
 const authorModel = require("../models/authorModel")
+const jwt = require("jsonwebtoken");
 
 const createAuthor =async function(req,res){
 try{   
@@ -17,15 +18,19 @@ catch(err){ res.status(500).send({ERROR:err.message})
 
 //Phase2
 const loginAuthor = async function (req, res) {
+   try{ 
+       let body= req.body
+       
+    if(body){
     let authName = req.body.emailId;
     let passwords = req.body.password;
-  console.log(authName)
+  
     let author = await authorModel.findOne({ email: authName, password: passwords });
-    if (!author)
-      return res.send({
+    if (!author){
+      return res.status(400).send({
         status: false,
         msg: "username or the password is not corerct",
-      });
+      });}
   
     let token = jwt.sign(
       {
@@ -36,9 +41,17 @@ const loginAuthor = async function (req, res) {
       },
       "Project-One"
     );
-    res.setHeader("x-auth-token", token);
+    res.status(201).setHeader("x-auth-token", token);
     res.send({ status: true, data: token });
-  };
+  }
+  else{res.status(400).send}
+
+}
+  catch (err){res.status(500).send({ERROR:err.message})}
+
+
+}
+  ;
 
  
  

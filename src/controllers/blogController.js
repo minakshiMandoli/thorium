@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+
 const blogModel = require("../models/blogModel")
 const authorModel = require("../models/authorModel");
-
+const jwt = require("jsonwebtoken");
 
 const createBlog = async function (req, res) {
   try {
@@ -9,7 +9,7 @@ const createBlog = async function (req, res) {
 
     if (data) {
 
- 
+
       let author = await authorModel.find({ _id: data.authorId })
       if (author.length != 0) {
 
@@ -72,28 +72,34 @@ const updateBlog = async function (req, res) {
 
   let data = req.body
 
+
   let x = await blogModel.findById(blogId)
 
   try {
-    if (x) {
-      if (x.isDeleted === false) {
 
-        if (data.isPublished === true) {
-          let a = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isPublished: true, publishedAt: Date.now() } })
+    if (Object.keys(data) != 0) {
+      if (x) {
+        if (x.isDeleted === false) {
+
+          if (data.isPublished === true) {
+            let a = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isPublished: true, publishedAt: Date.now() } })
+          }
+
+          let updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { ...data }, { new: true })
+
+          return res.status(202).send({ msg: "blog updated successfully", updatedBlog })
+
         }
-
-        let updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { ...data }, { new: true })
-
-        return res.status(202).send({ msg: "blog updated successfully", updatedBlog })
-
+        else {
+          return res.status(404).send({ msg: "blog not found" })
+        }
       }
       else {
-        return res.status(404).send({ msg: "blog not found" })
+        return res.status(404).send({ msg: "Bad Request" })
       }
-    }
-    else {
-      return res.status(404).send({ msg: "Blog not found" })
-    }
+
+
+    } else { res.status(400).send({ ERROR: "Bad Request" }) }
   }
   catch (err) {
     return res.status(500).send({ ERROR: err.message })
@@ -107,7 +113,8 @@ const updateBlog = async function (req, res) {
 let deleteBlogById = async function (req, res) {
 
   try {
-    let id = req.params.blogsId
+    let id = req.params.blogId
+    console.log(id)
 
     if (id) {
       let deletedBlog = await blogModel.findOneAndUpdate({ _id: id }, { $set: { isDeleted: true, deletedAt: Date.now() } })
@@ -127,24 +134,46 @@ let deleteBlogById = async function (req, res) {
 
 let deletedByQueryParams = async function (req, res) {
   try {
-    let data = req.query
 
-    if (data) {
+    let token = req.headers["x-auth-token"]
+
+    if (token) {
+      let decodedToken = jwt.verify(token, "Project-One")
+
+      if (decodedToken) {
+        let data = req.query
+
+        if (Object.keys(data) != 0) {
+
+          let blogsToBeDeleted = await blogModel.find(data).select({ authorId: 1, _id: 0 })
+
+          let btbd = blogsToBeDeleted.filter(ele => ele.authorId == decodedToken.authId)
 
 
 
-      let deletedBlogsFinal = await blogModel.updateMany({ $and: [data] }, { $set: { isDeleted: true, deletedAt: Date.now() } })
 
-      if (deletedBlogsFinal.modifiedCount === 0) { return res.status(404).send({ ERROR: "No such blog found" }) }
+          let deletedBlogsFinal = await blogModel.updateMany({ $in: btbd }, { $set: { isDeleted: true, deletedAt: Date.now() } })
+
+          if (deletedBlogsFinal.modifiedCount === 0) { return res.status(404).send({ ERROR: "No such blog found" }) }
 
 
-      return res.status(200).send({ status: "deleted" })
+          return res.status(200).send({ status: "deleted" })
+        }
+
+
+        else { res.status(400).send({ ERROR: "BAD REQUEST" }) }
+
+      } else { res.status(401).send({ ERROR: "Invalid Token" }) }
+
+
     }
+    else { res.status(400).send({ ERROR: "Please provide Token" }) }
 
-
-    else { res.status(400).send({ ERROR: "BAD REQUEST" }) }
 
   }
+
+
+
   catch (err) { res.status(500).send({ ERROR: err.message }) }
 }
 
