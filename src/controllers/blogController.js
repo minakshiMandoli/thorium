@@ -5,36 +5,53 @@ const jwt = require("jsonwebtoken");
 
 const createBlog = async function (req, res) {
   try {
+    let token = req.headers["x-auth-token"]
+
     let data = req.body;
 
-    if (data) {
+    if (token) {
 
 
-      let author = await authorModel.find({ _id: data.authorId })
-      if (author.length != 0) {
-
-        let savedData = await blogModel.create(data);
-        console.log(savedData._id)
-
-        if (data.isPublished === true) {
-
-          let x = await blogModel.findOneAndUpdate({ _id: savedData._id },
-            { $set: { publishedAt: Date.now() } }, { new: true })
-          return res.status(201).send({ msg: x })
-        }
+      let decodedToken = await jwt.verify(token, "Project-One")
 
 
 
-        res.status(201).send({ msg: savedData });
+      if (data) {
+        if (req.body.authorId == decodedToken.authId) {
 
+
+          let author = await authorModel.find({ _id: data.authorId })
+          if (author.length != 0) {
+
+            let savedData = await blogModel.create(data);
+            console.log(savedData._id)
+
+            if (data.isPublished === true) {
+
+              let x = await blogModel.findOneAndUpdate({ _id: savedData._id },
+                { $set: { publishedAt: Date.now() } }, { new: true })
+              return res.status(201).send({ msg: x })
+            }
+
+
+
+            res.status(201).send({ msg: savedData });
+
+          }
+
+          else {
+            res.status(404).send("Author does not exist")
+          }
+        }else{res.status(403).send({ERROR:"not authorized"})}
+
+
+       
       }
+      else { res.status(400).send("BAD REQUEST") }
 
-      else {
-        res.status(404).send("Author does not exist")
-      }
     }
+    else { res.status(400).send("please provide token") }
 
-    else { res.status(400).send("BAD REQUEST") }
   } catch (err) {
     res.status(500).send({ ERROR: err.message })
   }
