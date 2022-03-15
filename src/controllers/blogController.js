@@ -27,15 +27,15 @@ const getBlog =async function(req,res){
         const filter = {
         isDeleted:false,
         isPublished:true,
-            data
+            ...data
     }
 
 
-    const blog = await blogModel.find({$and:[ filter]} )
+    const blog = await blogModel.find( filter )
     if(blog.length == 0){
         return res.status(400).send({status: false,msg: "no blogs published"})
     }
-    return res.status(201).send({status:true,data:blog})
+    return res.status(200).send({status:true,data:blog})
     }
 
 
@@ -86,7 +86,7 @@ const updateBlog = async function (req, res) {
 let deleteBlogById = async function(req,res){
 
 try{
-        let id =req.params.blogId
+        let id =req.params.blogsId
         console.log(id)
     if(id){
         let deletedBlog = await blogModel.findOneAndUpdate({_id : id},{$set:{isDeleted:true}})
@@ -108,13 +108,16 @@ try{
           let data=req.query
        
            if(data){
+             
                
+          
+           let deletedBlogsFinal = await blogModel.updateMany({$and:[data]},{$set:{isDeleted:true}})
+       
+       
+          res.status(200).send({status:true})}
             
-           let deletedBlogsFinal = await blogModel.updateMany({$in:data},{$set:{isDeleted:true}})
-       
-       
-          res.status(200).send({status:true})
-            } else { res.status(400).send({ERROR:"BAD REQUEST"})}
+        
+        else { res.status(400).send({ERROR:"BAD REQUEST"})}
        
        }
         catch(err){res.status(500).send({ERROR:err.message})}
