@@ -128,8 +128,6 @@ let deleteBlogById = async function (req, res) {
 }
 
 
-
-
 //delete by query params
 
 let deletedByQueryParams = async function (req, res) {
@@ -148,9 +146,6 @@ let deletedByQueryParams = async function (req, res) {
           let blogsToBeDeleted = await blogModel.find(data).select({ authorId: 1, _id: 0 })
 
           let btbd = blogsToBeDeleted.filter(ele => ele.authorId == decodedToken.authId)
-
-
-
 
           let deletedBlogsFinal = await blogModel.updateMany({ $in: btbd }, { $set: { isDeleted: true, deletedAt: Date.now() } })
 
@@ -171,9 +166,6 @@ let deletedByQueryParams = async function (req, res) {
 
 
   }
-
-
-
   catch (err) { res.status(500).send({ ERROR: err.message }) }
 }
 
