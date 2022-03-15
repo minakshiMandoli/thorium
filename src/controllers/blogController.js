@@ -86,17 +86,19 @@ const getBlog = async function (req, res) {
 const updateBlog = async function (req, res) {
 
   let blogId = req.params.blogId
+  
 
   let data = req.body
 
 
   let x = await blogModel.findById(blogId)
+ 
 
   try {
 
     if (Object.keys(data) != 0) {
       if (x) {
-        if (x.isDeleted === false) {
+        if (x.isDeleted == false) {
 
           if (data.isPublished === true) {
             let a = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isPublished: true, publishedAt: Date.now() } })
@@ -156,29 +158,43 @@ let deletedByQueryParams = async function (req, res) {
 
     if (token) {
       let decodedToken = jwt.verify(token, "Project-One")
+      console.log(decodedToken)
 
       if (decodedToken) {
         let data = req.query
 
         if (Object.keys(data) != 0) {
 
-          let blogsToBeDeleted = await blogModel.find(data).select({ authorId: 1, _id: 0 })
+          let blogsToBeDeleted = await blogModel.find(data).select({ authorId: 1, _id: 1 })
+          console.log(blogsToBeDeleted)
+          if(blogsToBeDeleted.length!=0){
 
-          let btbd = blogsToBeDeleted.filter(ele => ele.authorId == decodedToken.authId)
+          let btbd = blogsToBeDeleted.filter(function(el){return el.authorId==decodedToken.authId})
+          console.log(btbd)
+          if(btbd!=0){
 
 
 
 
-          let deletedBlogsFinal = await blogModel.updateMany({ $in: btbd }, { $set: { isDeleted: true, deletedAt: Date.now() } })
+          let deletedBlogsFinal = await blogModel.updateMany({ _id:{$in: btbd }}, { $set: { isDeleted: true, deletedAt: Date.now() } })
+          console.log(deletedBlogsFinal)
 
           if (deletedBlogsFinal.modifiedCount === 0) { return res.status(404).send({ ERROR: "No such blog found" }) }
 
 
           return res.status(200).send({ status: "deleted" })
-        }
+        
+        }else{return res.status(403).send({ERROR:"Not Authorized"})}
+        
+      
+      }
+          else{return res.status(404).send({ ERROR: "No such blog found" })}
+        
+        
+        }else{return res.status(404).send({ ERROR: "Bad Request" })}
 
 
-        else { res.status(400).send({ ERROR: "BAD REQUEST" }) }
+       
 
       } else { res.status(401).send({ ERROR: "Invalid Token" }) }
 
