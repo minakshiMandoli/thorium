@@ -8,7 +8,7 @@ const createBlog = async function (req, res) {
 
     let data = req.body;
 
-    if (data) {
+    if (Object.keys(data)!=0) {
       if (req.body.authorId == req.decodedToken.authId) {
 
 

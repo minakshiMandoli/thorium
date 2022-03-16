@@ -6,15 +6,16 @@ const createAuthor = async function (req, res) {
   try {
 
     let data = req.body;
+    console.log(data)
 
-    if (data) {
+    if (Object.keys(data)) {
 
       let savedData = await authorModel.create(data);
-      return res.status(201).send({ msg: savedData });
+      return res.status(201).send({ AuthorDetails: savedData });
 
     }
 
-    else {return res.status(400).send("BAD REQUEST") }
+    else {return res.status(400).send({ERROR:"BAD REQUEST"}) }
 
   }catch (err){
 
@@ -29,7 +30,7 @@ const loginAuthor = async function (req, res) {
 
     let body = req.body
 
-    if (body) {
+    if (Object.keys(body)!=0) {
       let authName = req.body.email;
       let passwords = req.body.password;
 
