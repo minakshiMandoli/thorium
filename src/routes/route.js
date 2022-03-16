@@ -6,19 +6,19 @@ const blogController = require('../controllers/blogController')
 const mid1 = require("../middleware/middleware")
 
 
-router.post("/createAuthor", authorController.createAuthor)
+router.post("/authors", authorController.createAuthor)
 
-router.post("/loginToken", authorController.loginAuthor)
+router.post("/login", authorController.loginAuthor)
 
-router.post("/createBlog", mid1.auth, blogController.createBlog)
+router.post("/blogs", mid1.auth, blogController.createBlog)
 
-router.get("/blog", mid1.auth, blogController.getBlog)
+router.get("/blogs", mid1.auth, blogController.getBlog)
 
-router.put("/blogs1/:blogId", mid1.auth, blogController.updateBlog)
+router.put("/blogs/:blogId", mid1.auth, blogController.updateBlog)
 
 router.delete("/blogs/:blogId", mid1.auth, blogController.deleteBlogById)
 
-router.delete("/deleteBlogs", mid1.auth, blogController.deletedByQueryParams)
+router.delete("/blogs", mid1.auth, blogController.deletedByQueryParams)
 
 
 module.exports = router;

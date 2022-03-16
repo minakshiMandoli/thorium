@@ -53,7 +53,7 @@ const loginAuthor = async function (req, res) {
 
       );
       res.status(200).setHeader("x-api-key", token);
-      return res.status(201).send({ status: true, data: token });
+      return res.status(201).send({ status: "LoggedIn", TOKEN: token });
     }
 
     else {return res.status(400).send({ERROR:"Bad Request"}) }
