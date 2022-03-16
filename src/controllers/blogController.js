@@ -166,7 +166,7 @@ let deletedByQueryParams = async function (req, res) {
           let deletedBlogs = await blogModel.updateMany({ _id: { $in: blogsToBeDeleted } },
             { $set: { isDeleted: true, deletedAt: Date.now() } })
      
-            return res.status(200).send("Requested blog has been deleted")
+            return res.status(200).send({status:"Requested blog has been deleted"})
 
         } else {return res.status(403).send({ ERROR: "The author is not authorised to delete the requested blogs" }) }
 
