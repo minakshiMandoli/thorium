@@ -8,12 +8,12 @@ const createAuthor = async function (req, res) {
     if (data) {
 
       let savedData = await authorModel.create(data);
-      res.status(201).send({ msg: savedData });
+      return res.status(201).send({ msg: savedData });
     }
-    else { res.status(400).send("BAD REQUEST") }
+    else {return res.status(400).send("BAD REQUEST") }
   }
   catch (err) {
-    res.status(500).send({ ERROR: err.message })
+    return res.status(500).send({ ERROR: err.message })
 
   }
 }
@@ -45,12 +45,12 @@ const loginAuthor = async function (req, res) {
 
       );
       res.status(201).setHeader("x-api-key", token);
-      res.send({ status: true, data: token });
+      return res.status(201).send({ status: true, data: token });
     }
-    else { res.status(400).send({ERROR:"Bad Request"}) }
+    else {return res.status(400).send({ERROR:"Bad Request"}) }
 
   }
-  catch (err) { res.status(500).send({ ERROR: err.message }) }
+  catch (err) {return res.status(500).send({ ERROR: err.message }) }
 
 
 }
