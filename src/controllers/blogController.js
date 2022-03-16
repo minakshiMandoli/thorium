@@ -1,4 +1,4 @@
-const moment = require("moment");
+
 const blogModel = require("../models/blogModel")
 const authorModel = require("../models/authorModel");
 const jwt = require("jsonwebtoken");
@@ -60,12 +60,12 @@ const createBlog = async function (req, res) {
 
 
 const getBlog = async function (req, res) {
+try{ 
+  
+  let token = req.headers["x-api-key"]
+  if(token){
   const data = req.query
-  const filter = {
-    isDeleted: false,
-    isPublished: true,
-    ...data
-  }
+  const filter = {isDeleted: false,isPublished: true, ...data  }
 
 
   const blog = await blogModel.find(filter)
@@ -73,7 +73,12 @@ const getBlog = async function (req, res) {
     return res.status(404).send({ status: false, msg: "no blogs found" })
   }
   return res.status(200).send({ status: true, data: blog })
-}
+}else{
+  res.status(401).send("Not authenticated")
+
+}}catch(err){
+  res.status(500).send(err.message)
+}}
 
 
 
@@ -85,17 +90,19 @@ const getBlog = async function (req, res) {
 const updateBlog = async function (req, res) {
 
   let blogId = req.params.blogId
+  
 
   let data = req.body
 
 
   let x = await blogModel.findById(blogId)
+ 
 
   try {
 
     if (Object.keys(data) != 0) {
       if (x) {
-        if (x.isDeleted === false) {
+        if (x.isDeleted == false) {
 
           if (data.isPublished === true) {
             let a = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isPublished: true, publishedAt: Date.now() } })
@@ -145,35 +152,60 @@ let deleteBlogById = async function (req, res) {
 
 //delete by query params
 
-const deleteBlogByQuery = async function (req, res) {
+let deletedByQueryParams = async function (req, res) {
   try {
-      const data = req.query
 
-      if (!data) return res.status(400).send({ error: "Please enter some data to campare" })
+    let token = req.headers["x-api-key"]
 
-      const timeDate = moment()
-      const dataforUpdation = { isDeleted : true , deletedAt : timeDate}
+    if (token) {
+      let decodedToken = jwt.verify(token, "Project-One")
+      console.log(decodedToken)
 
-      const result = await blogModel.updateMany(data, dataforUpdation , { new: true })
+      if (decodedToken) {
+        let data = req.query
 
-      if (!result) res.status(404).send({ error: " No data found" })
+        if (Object.keys(data) != 0) {
 
-      res.send({ status: "Deleted", data: result });
+          let blogsToBeDeleted = await blogModel.find(data).select({ authorId: 1, _id: 1 })
+          console.log(blogsToBeDeleted)
+          if (blogsToBeDeleted.length != 0) {
+
+            let btbd = blogsToBeDeleted.filter(function (el) { return el.authorId == decodedToken.authId })
+            console.log(btbd)
+            if (btbd != 0) {
+
+
+              let deletedBlogsFinal = await blogModel.updateMany({ _id: { $in: btbd } }, { $set: { isDeleted: true, deletedAt: Date.now() } })
+              console.log(deletedBlogsFinal)
+
+              //if (deletedBlogsFinal.modifiedCount === 0) { return res.status(404).send({ ERROR: "No such blog found" }) }
+
+
+              return res.status(200).send({ status: "deleted" })
+
+            } else { return res.status(403).send({ ERROR: "Not Authorized" }) }
+
+          }
+          else { return res.status(404).send({ ERROR: "No such blog found" }) }
+
+        } else { return res.status(400).send({ ERROR: "Bad Request" }) }
+
+      } else { res.status(401).send({ ERROR: "Invalid Token" }) }
+
+    }
+    else { res.status(400).send({ ERROR: "Please provide Token" }) }
   }
-  catch (err) {
-      console.log(err)
-      res.status(500).send({ msg: err.message })
-  }
+
+  catch (err) { res.status(500).send({ ERROR: err.message }) }
 }
 
 
+
+
 module.exports.createBlog = createBlog
-
-
 module.exports.getBlog = getBlog
-
 module.exports.updateBlog = updateBlog
 module.exports.deleteBlogById = deleteBlogById
-module.exports.deletedByQueryParams = deleteBlogByQuery
+module.exports.deletedByQueryParams = deletedByQueryParams
 
 

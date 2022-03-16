@@ -38,8 +38,8 @@ const loginAuthor = async function (req, res) {
         batch: "thorium",
         organisation: "FUnctionUp",
         project:"Project-1"
-      },"stack",{expiresIn:"240s"},  
-      "Project-One"
+      }, "Project-One",{expiresIn:"1h"}  
+     
     );
     res.status(201).setHeader("x-api-key", token);
     res.send({ status: true, data: token });
