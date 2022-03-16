@@ -15,19 +15,13 @@ const jwt = require("jsonwebtoken");
             
             }
 
-
-
         }else{ return res.status(400).send({ERROR:"Token Missing"})}   
 
 
 
 
-    }catch(err){return res.status(401).send({ERROR:err.message})}
-
-
+    }catch(err){
+        return res.status(401).send({ERROR:err.message})}
 }
    
-
-
-
 module.exports.auth=auth
