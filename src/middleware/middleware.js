@@ -2,28 +2,9 @@ const jwt = require("jsonwebtoken");
 const blogModel = require("../models/blogModel")
 
 
-// const authentication=function(req,res,next){
-//         let token = req.headers["x-auth-token"];
-//         if(!token) return res.send({ status:false, msg:"token must be present"})
-//         let decodedToken = jwt.verify(token, "Project-One")
-//         if(!decodedToken) return res.send({ status: false, msg: "token is invalid"})
-//         next()
-//     }
-
-
-    
-
-//     const authorise = function(req, res, next) {
-//         let token = req.headers["x-auth-token"];
-//         let decodedToken = jwt.verify(token,  "Project-One")
-//         let userToBeModified = req.params.authorId
-//         let userLoggedIn = decodedToken.authorId
-//         if(userToBeModified != userLoggedIn) return res.send({status: false, msg: 'User logged is not allowed to modify the requested users data'})
-//         next()
-//     }
     const auth = async function (req, res, next) {
         try {
-            let token = req.headers["x-auth-token"];
+            let token = req.headers["x-api-key"];
             if (!token) 
            { return res.status(400).send({ status: false, msg: "token must be present" })}
             let decodedToken = jwt.verify(token, "Project-One")
@@ -38,9 +19,6 @@ const blogModel = require("../models/blogModel")
             
             let author=blogToBeModified.authorId
             
-            
-
-
             let userLoggedIn = decodedToken.authId
            
             if (author != userLoggedIn)

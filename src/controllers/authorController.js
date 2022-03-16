@@ -22,7 +22,7 @@ const loginAuthor = async function (req, res) {
        let body= req.body
        
     if(body){
-    let authName = req.body.emailId;
+    let authName = req.body.email;
     let passwords = req.body.password;
   
     let author = await authorModel.findOne({ email: authName, password: passwords });
@@ -38,13 +38,13 @@ const loginAuthor = async function (req, res) {
         batch: "thorium",
         organisation: "FUnctionUp",
         project:"Project-1"
-      },
+      },"stack",{expiresIn:"240s"},  
       "Project-One"
     );
-    res.status(201).setHeader("x-auth-token", token);
+    res.status(201).setHeader("x-api-key", token);
     res.send({ status: true, data: token });
   }
-  else{res.status(400).send}
+  else{res.status(400).send("Bad Request")}
 
 }
   catch (err){res.status(500).send({ERROR:err.message})}
