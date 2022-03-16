@@ -142,3 +142,28 @@ Refer below sample
 
 
 //readme
+
+
+
+if (Object.keys(data) != 0) {
+
+          let blogsToBeDeleted = await blogModel.find(data).select({ authorId: 1, _id: 1 })
+          console.log(blogsToBeDeleted)
+          if (blogsToBeDeleted.length != 0) {
+
+            let btbd = blogsToBeDeleted.filter(function (el) { return el.authorId == decodedToken.authId })
+            console.log(btbd)
+            if (btbd != 0) {
+
+
+              let deletedBlogsFinal = await blogModel.updateMany({ _id: { $in: btbd } }, { $set: { isDeleted: true, deletedAt: Date.now() } })
+              console.log(deletedBlogsFinal)
+
+               }
+
+
+              return res.status(200).send({ status: "deleted" })
+
+            } else { return res.status(403).send({ ERROR: "Not Authorized" }) }
+
+          }
