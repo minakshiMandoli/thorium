@@ -19,13 +19,12 @@ const authorSchema = new mongoose.Schema({
        unique:true,
         type: String,
         required: true,
-        match: [/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/, 'Please fill a valid email address']
-
-
+        // match: [/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
     password: {
         type: String,
-        required: true
+        // required: true,
+        // match:[/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,"Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"]
     }
 }, { timestamps: true });
 
