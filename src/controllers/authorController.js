@@ -1,11 +1,22 @@
 const authorModel = require("../models/authorModel")
 const jwt = require("jsonwebtoken");
 
+
+
+
+const isValid = function(value){
+if(typeof value ==undefined ||  value ==null)return false
+if(typeof value==='string'&&value.trim().length===0) return false
+return true
+
+}
+
 const createAuthor = async function (req, res) {
 
   try {
 
     let data = req.body;
+<<<<<<< HEAD
     // console.log(data)
     if (data) {
       let pw = data.password
@@ -34,6 +45,23 @@ const createAuthor = async function (req, res) {
     }
 
     else { return res.status(400).send("BAD REQUEST") }
+=======
+    console.log(data.fname)
+
+    if (Object.keys(data).length>0) {
+      if(!isValid(data.fname)){return res.status(400).send({status:false , msg:"First name is required"})}
+      if(!isValid(data.lname)){return res.status(400).send({status:false , msg:"Last name is required"})}
+     if (! (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(data.email) )){return res.status(400).send({status:false,msg:"Please provide a valid email"})}
+     if(! (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(data.password)) ){return res.status(400).send({status:false , msg:"please provide a valid password with one uppercase letter ,one lowercase, one character and one number "})}
+      
+
+      let savedData = await authorModel.create(data);
+      return res.status(201).send({ AuthorDetails: savedData });
+
+    }
+
+    else {return res.status(400).send({ERROR:"BAD REQUEST"}) }
+>>>>>>> aa799b9b8f391df5c40308c51becf55bd93dc169
 
   } catch (err) {
 
@@ -49,11 +77,19 @@ const loginAuthor = async function (req, res) {
 
     let body = req.body
 
-    if (body) {
+    if (Object.keys(body)!=0) {
       let authName = req.body.email;
+<<<<<<< HEAD
       if (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(authName)) {
         let passwords = req.body.password;
         if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(passwords)) {
+=======
+      let passwords = req.body.password;
+      if (! (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(authName) )){return res.status(400).send({status:false,msg:"Please provide a valid email"})}
+     if(! (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(passwords)) ){return res.status(400).send({status:false , msg:"please provide valid password with one uppercase letter ,one lowercase, one character and one number "})}
+      
+
+>>>>>>> aa799b9b8f391df5c40308c51becf55bd93dc169
 
 
           let author = await authorModel.findOne({ email: authName, password: passwords });
@@ -84,6 +120,19 @@ const loginAuthor = async function (req, res) {
       } else {
         return res.status(400).send("not a valid email")
       }
+<<<<<<< HEAD
+=======
+
+      let token = jwt.sign(
+        {
+          authId: author._id,
+          
+        }, "Project-One", { expiresIn: "1h" }
+
+      );
+      res.status(200).setHeader("x-api-key", token);
+      return res.status(201).send({ status: "LoggedIn", TOKEN: token });
+>>>>>>> aa799b9b8f391df5c40308c51becf55bd93dc169
     }
 
     else { return res.status(400).send({ ERROR: "Bad Request" }) }

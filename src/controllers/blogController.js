@@ -1,6 +1,12 @@
 
 const blogModel = require("../models/blogModel")
 
+const isValid = function(value){
+  if(typeof value ==undefined ||  value ==null || value.length == 0)return false
+  if(typeof value==='string'&&value.trim().length===0) return false
+  return true
+  
+  }
 
 //..................................................................................................
 const createBlog = async function (req, res) {
@@ -8,7 +14,14 @@ const createBlog = async function (req, res) {
 
     let data = req.body;
 
-    if (data) {
+    if (Object.keys(data)!=0) {
+      if(!isValid(data.title)){return res.status(400).send({status:false , msg:"Title is required"})}
+      if(!isValid(data.body)){return res.status(400).send({status:false , msg:"Body is required"})}
+      if(!isValid(data.category)){return res.status(400).send({status:false , msg:"Category is required "})}
+
+
+
+
       if (req.body.authorId == req.decodedToken.authId) {
 
 
@@ -46,7 +59,7 @@ const getBlog = async function (req, res) {
 
     const data = req.query
 
-    const filter = { isDeleted: false, isPublished: true, $and: [data] }
+    const filter = { isDeleted: false, isPublished: true, ...data }
 
     const blog = await blogModel.find(filter)
     if (blog.length === 0) {
