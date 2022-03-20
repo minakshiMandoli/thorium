@@ -22,5 +22,3 @@ router.delete("/blogs", mid1.auth, blogController.deletedByQueryParams)
 
 
 module.exports = router;
-
-

@@ -16,41 +16,8 @@ const createAuthor = async function (req, res) {
   try {
 
     let data = req.body;
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // console.log(data)
-    if (data) {
-      let pw = data.password
-      // console.log(pw)
-      let eM = data.email
-      // console.log(eM)
-      if (eM && pw) {
-
-        if (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(eM)) {
-
-          if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(pw)) {
-
-            let savedData = await authorModel.create(data);
-            return res.status(201).send({ Data: savedData });
-
-          } else {
-            return res.status(400).send("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character")
-          }
-        } else {
-          return res.status(400).send("not a valid email")
-        }
-      } else {
-        return res.status(400).send("email or password is empty")
-      }
-
-    }
-
-    else { return res.status(400).send("BAD REQUEST") }
-=======
-=======
     
->>>>>>> 04b57004a9aa8091d774a7f25ed63d712c26ded6
-    console.log(data.fname)
+    //console.log(data.fname)
 
     if (Object.keys(data).length>0) {
       if(!isValid(data.fname)){return res.status(400).send({status:false , msg:"First name is required"})}
@@ -58,22 +25,21 @@ const createAuthor = async function (req, res) {
      if (! (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(data.email) )){return res.status(400).send({status:false,msg:"Please provide a valid email"})}
      if(! (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(data.password)) ){return res.status(400).send({status:false , msg:"please provide a valid password with one uppercase letter ,one lowercase, one character and one number "})}
      let dupli = await authorModel.findOne({email: data.email}) 
-     if(!dupli){return res.status(400).send({status:false , msg:"Email already exists"})}
-
+     
+     if(dupli) {return res.status(400).send({status:false , msg:"Email already exists"})}
+     
       let savedData = await authorModel.create(data);
       return res.status(201).send({ AuthorDetails: savedData });
 
     }
 
     else {return res.status(400).send({ERROR:"BAD REQUEST"}) }
->>>>>>> aa799b9b8f391df5c40308c51becf55bd93dc169
 
-  } catch (err) {
+  }catch (err){
 
     return res.status(500).send({ ERROR: err.message })
 
-  }
-}
+  }}
 
 //Phase2
 const loginAuthor = async function (req, res) {
@@ -84,49 +50,21 @@ const loginAuthor = async function (req, res) {
 
     if (Object.keys(body)!=0) {
       let authName = req.body.email;
-<<<<<<< HEAD
-      if (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(authName)) {
-        let passwords = req.body.password;
-        if (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(passwords)) {
-=======
       let passwords = req.body.password;
       if (! (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(authName) )){return res.status(400).send({status:false,msg:"Please provide a valid email"})}
      if(! (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(passwords)) ){return res.status(400).send({status:false , msg:"please provide valid password with one uppercase letter ,one lowercase, one character and one number "})}
       
 
->>>>>>> aa799b9b8f391df5c40308c51becf55bd93dc169
 
+      let author = await authorModel.findOne({ email: authName, password: passwords });
 
-          let author = await authorModel.findOne({ email: authName, password: passwords });
+      if (!author) {
 
-          if (!author) {
-
-            return res.status(400).send({
-              status: false,
-              ERROR: "username or the password is not corerct",
-            });
-          }
-
-          let token = jwt.sign(
-            {
-              authId: author._id,
-              batch: "thorium",
-              organisation: "FUnctionUp",
-              project: "Project-1"
-            }, "Project-One", { expiresIn: "1h" }
-
-          );
-          res.status(200).setHeader("x-api-key", token);
-          return res.status(201).send({ status: "loggedIn", TOKEN: token });
-
-        } else {
-          return res.status(400).send("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character")
-        }
-      } else {
-        return res.status(400).send("not a valid email")
+        return res.status(400).send({
+          status: false,
+          ERROR: "username or the password is not corerct",
+        });
       }
-<<<<<<< HEAD
-=======
 
       let token = jwt.sign(
         {
@@ -137,16 +75,14 @@ const loginAuthor = async function (req, res) {
       );
       res.status(200).setHeader("x-api-key", token);
       return res.status(201).send({ status: "LoggedIn", TOKEN: token });
->>>>>>> aa799b9b8f391df5c40308c51becf55bd93dc169
     }
 
-    else { return res.status(400).send({ ERROR: "Bad Request" }) }
+    else {return res.status(400).send({ERROR:"Bad Request"}) }
 
   }
   catch (err) {
-
-    return res.status(500).send({ ERROR: err.message })
-  }
+    
+    return res.status(500).send({ ERROR: err.message }) }
 
 };
 
@@ -154,6 +90,3 @@ const loginAuthor = async function (req, res) {
 module.exports.loginAuthor = loginAuthor
 
 module.exports.createAuthor = createAuthor
-
-
-

@@ -186,15 +186,11 @@ let deletedByQueryParams = async function (req, res) {
       if (getBlogs.length != 0) {
 
         let blogsToBeDeleted = getBlogs.filter(function (el) { return el.authorId == req.decodedToken.authId })
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> 04b57004a9aa8091d774a7f25ed63d712c26ded6
         if (blogsToBeDeleted != 0) {
 
 
-          let deletedBlogs = await blogModel.updateMany({ _id: { $in: blogsToBeDeleted , isPublished:true} },
+          let deletedBlogs = await blogModel.updateMany({ _id: { $in: blogsToBeDeleted } },
             { $set: { isDeleted: true, deletedAt: Date.now() } })
           console.log(deletedBlogs)
 
@@ -224,5 +220,3 @@ module.exports.getBlog = getBlog
 module.exports.updateBlog = updateBlog
 module.exports.deleteBlogById = deleteBlogById
 module.exports.deletedByQueryParams = deletedByQueryParams
-
-
