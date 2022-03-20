@@ -16,6 +16,7 @@ const createAuthor = async function (req, res) {
   try {
 
     let data = req.body;
+    
     console.log(data.fname)
 
     if (Object.keys(data).length>0) {
@@ -23,7 +24,8 @@ const createAuthor = async function (req, res) {
       if(!isValid(data.lname)){return res.status(400).send({status:false , msg:"Last name is required"})}
      if (! (/^\w+([\.-]?\w+)@\w+([\. -]?\w+)(\.\w{2,3})+$/.test(data.email) )){return res.status(400).send({status:false,msg:"Please provide a valid email"})}
      if(! (/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(data.password)) ){return res.status(400).send({status:false , msg:"please provide a valid password with one uppercase letter ,one lowercase, one character and one number "})}
-      
+     let dupli = await authorModel.findOne({email: data.email}) 
+     if(!dupli){return res.status(400).send({status:false , msg:"Email already exists"})}
 
       let savedData = await authorModel.create(data);
       return res.status(201).send({ AuthorDetails: savedData });
