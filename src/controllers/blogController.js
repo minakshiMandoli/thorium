@@ -85,8 +85,10 @@ const updateBlog = async function (req, res) {
 
     let blogId = req.params.blogId
     let data = req.body
+    let filter= {}
     let blogToBeModified = await blogModel.findById(blogId)
     if (blogToBeModified) {
+
 
       if (blogToBeModified.authorId == req.decodedToken.authId) {
 
@@ -94,6 +96,12 @@ const updateBlog = async function (req, res) {
         if (Object.keys(data) != 0) {
 
           if (blogToBeModified.isDeleted == false) {
+            if(isValid(data.title)){filter['title']= data.category}
+     if(isValid(data.body)){filter['body']=data.body}
+     if(isValid(data.tags)){filter['tags']=data.tags}
+     if(isValid(data.subcateogory)){filter['subcategory']=data.subcategory}
+     if(isValid(data.isPublished)){filter['isPublished']=data.isPublished}
+
 
             if (data.isPublished === true) {
               let blogToBePublished = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isPublished: true, publishedAt: Date.now() } })
