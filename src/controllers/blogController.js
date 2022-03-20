@@ -85,7 +85,6 @@ const updateBlog = async function (req, res) {
 
     let blogId = req.params.blogId
     let data = req.body
-    let filter = {title:data.title , tags:data.tags, subcategory:data.subcategory, isPublished:data.isPublished }
     let blogToBeModified = await blogModel.findById(blogId)
     if (blogToBeModified) {
 
@@ -168,9 +167,12 @@ let deletedByQueryParams = async function (req, res) {
 
     let data = req.query
     if (Object.keys(data) != 0) {
-      if(data.ispublished==true){return res.status(400).send({status:false ,msg:"isPublished must be false."})}
-      let filter = {isDeleted:false ,category:data.category, authorId:data.authorId,tags:data.tags,subcategory:data.subcategory , isPublished:data.isPublished} 
-
+      if(data.ispublished==true){return res.status(400).send({status:false ,msg:"isPublished must be false. That is the "})}
+     let filter = {isDeleted:false }
+     if(isValid(data.category)){filter['category']= data.category}
+     if(isValid(data.authorId)){filter['authorId']=data.authorId}
+     if(isValid(data.tags)){filter['tags']=data.tags}
+console.log(filter)
       let getBlogs = await blogModel.find(filter).select({ authorId: 1, _id: 1 })
     
       if (getBlogs.length != 0) {
@@ -182,6 +184,7 @@ let deletedByQueryParams = async function (req, res) {
 
           let deletedBlogs = await blogModel.updateMany({ _id: { $in: blogsToBeDeleted } },
             { $set: { isDeleted: true, deletedAt: Date.now() } })
+            console.log(deletedBlogs)
      
             return res.status(200).send({status:"Requested blog has been deleted"})
 
