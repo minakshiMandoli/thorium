@@ -85,6 +85,7 @@ const updateBlog = async function (req, res) {
 
     let blogId = req.params.blogId
     let data = req.body
+    let filter = {title:data.title , tags:data.tags, subcategory:data.subcategory, isPublished:data.isPublished }
     let blogToBeModified = await blogModel.findById(blogId)
     if (blogToBeModified) {
 
@@ -135,6 +136,7 @@ let deleteBlogById = async function (req, res) {
 
     if (id) {
       let blogToBeDeleted = await blogModel.findById(id)
+      if(blogToBeDeleted.isDeleted==true){return res.status.send({status:fale , msg:"Blog has already been deleted"})}
       if (blogToBeDeleted) {
              if (blogToBeDeleted.authorId == req.decodedToken.authId) {
 
@@ -166,8 +168,10 @@ let deletedByQueryParams = async function (req, res) {
 
     let data = req.query
     if (Object.keys(data) != 0) {
+      if(data.ispublished==true){return res.status(400).send({status:false ,msg:"isPublished must be false."})}
+      let filter = {isDeleted:false ,category:data.category, authorId:data.authorId,tags:data.tags,subcategory:data.subcategory , isPublished:data.isPublished} 
 
-      let getBlogs = await blogModel.find(data).select({ authorId: 1, _id: 1 })
+      let getBlogs = await blogModel.find(filter).select({ authorId: 1, _id: 1 })
     
       if (getBlogs.length != 0) {
 
