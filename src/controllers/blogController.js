@@ -15,8 +15,10 @@ const createBlog = async function (req, res) {
     let data = req.body;
 
     if (Object.keys(data) != 0) {
-      if (!isValid(data.title)) { return res.status(400).send({ status: false, msg: "Title is required" }) }
-      if (!isValid(data.body)) { return res.status(400).send({ status: false, msg: "Body is required" }) }
+      if (!isValid(data.title))
+       { return res.status(400).send({ status: false, msg: "Title is required" }) }
+      if (!isValid(data.body)) 
+      { return res.status(400).send({ status: false, msg: "Body is required" }) }
       if (!isValid(data.category)) { return res.status(400).send({ status: false, msg: "Category is required " }) }
 
 
@@ -143,7 +145,7 @@ let deleteBlogById = async function (req, res) {
 
     if (id) {
       let blogToBeDeleted = await blogModel.findById(id)
-      if (blogToBeDeleted.isDeleted == true) { return res.status.send({ status: fale, msg: "Blog has already been deleted" }) }
+      if (blogToBeDeleted.isDeleted == true) { return res.status(400).send({ status: false, msg: "Blog has already been deleted" }) }
       if (blogToBeDeleted) {
         if (blogToBeDeleted.authorId == req.decodedToken.authId) {
 
@@ -175,12 +177,13 @@ let deletedByQueryParams = async function (req, res) {
 
     let data = req.query
     if (Object.keys(data) != 0) {
-      if (data.ispublished == true) { return res.status(400).send({ status: false, msg: "isPublished must be false. That is the " }) }
+      if (data.ispublished == true) {
+         return res.status(400).send({ status: false, msg: "isPublished must be false. That is the " }) }
       let filter = { isDeleted: false }
       if (isValid(data.category)) { filter['category'] = data.category }
       if (isValid(data.authorId)) { filter['authorId'] = data.authorId }
       if (isValid(data.tags)) { filter['tags'] = data.tags }
-      console.log(filter)
+      //console.log(filter)
       let getBlogs = await blogModel.find(filter).select({ authorId: 1, _id: 1 })
 
       if (getBlogs.length != 0) {
@@ -192,7 +195,7 @@ let deletedByQueryParams = async function (req, res) {
 
           let deletedBlogs = await blogModel.updateMany({ _id: { $in: blogsToBeDeleted } },
             { $set: { isDeleted: true, deletedAt: Date.now() } })
-          console.log(deletedBlogs)
+          //console.log(deletedBlogs)
 
           return res.status(200).send({ status: "Requested blog has been deleted" })
 
