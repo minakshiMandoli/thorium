@@ -1,30 +1,79 @@
-//const { stubString } = require('lodash');
 const mongoose = require('mongoose');
-//const { required } = require('nodemon/lib/config');
+const ObjectId = mongoose.Schema.Types.ObjectId
 
-const newBook = new mongoose.Schema( {
-    bookName: {
+const bookSchema = new mongoose.Schema({
+    userId: {
+        type: ObjectId,
+        required: true,
+        trim: true,
+        ref: "user",
+    },
+    title: {
         type: String,
         required: true,
-    
+        unique: true,
+        trim: true
     },
-    authorName: {
+    excerpt: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
-    price: {
-        indianPrice: String,
-        europePrice: String,
+    
+    ISBN: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
     },
-    publicationYear: {type:Date, default:2021},
-    tags:[String],
-    totalPages: {type:Number},
-    isStockAvailable:{type:Boolean}
+    category: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    subcategory: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    reviews: {
+        type: Number,
+        default: 0,
+    },
+    
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
 
+    deletedAt: Date,
+
+    releasedAt: {
+        type: Date,
+      required: true,
+      trim: true
+           
+    },
+    bookCover:{
+        type: String
+    }
 },
- { timestamps: true });
+    { timestamps: true }
+)
 
-module.exports = mongoose.model('Book', newBook) //books
+module.exports = mongoose.model('book', bookSchema)
 
-
-
+// { 
+//     title: {string, mandatory, unique},
+//     excerpt: {string, mandatory}, 
+//     userId: {ObjectId, mandatory, refs to user model},
+//     ISBN: {string, mandatory, unique},
+//     category: {string, mandatory},
+//     subcategory: {string, mandatory},
+//     reviews: {number, default: 0, comment: Holds number of reviews of this book},
+//     deletedAt: {Date, when the document is deleted}, 
+//     isDeleted: {boolean, default: false},
+//     releasedAt: {Date, mandatory, format("YYYY-MM-DD")},
+//     createdAt: {timestamp},
+//     updatedAt: {timestamp},
+//   }

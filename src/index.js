@@ -3,12 +3,14 @@ const bodyParser = require('body-parser');
 const route = require('./routes/route.js');
 const { default: mongoose } = require('mongoose');
 const app = express();
+const multer = require("multer")
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer().any())
 
 
-mongoose.connect("mongodb+srv://minakshiMandoli:dgxTSdYv05ArJVEs@cluster0.ovgsa.mongodb.net/minakshiMandoliDB2?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://minakshiMandoli:dgxTSdYv05ArJVEs@cluster0.ovgsa.mongodb.net/group18DataBase?retryWrites=true&w=majority", {
     useNewUrlParser: true
 })
 .then( () => console.log("MongoDb is connected"))
