@@ -1,17 +1,22 @@
 {
-  "name": "src",
+  "name": "poject4_urlshortner",
   "version": "1.0.0",
-  "description": "Backend cohort for Thorium(feb-May)",
+  "description": "Backend cohort Feb 2022 - May 2022",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "mongoose": "^6.2.3"
+    "express": "^4.17.3",
+    "mongoose": "^6.2.9",
+    "nodemon": "^2.0.15",
+    "redis": "^3.0.2",
+    "short-id": "^0.1.0-1",
+    "shortid": "^2.2.16",
+    "util": "^0.12.4",
+    "valid-url": "^1.0.9"
   }
 }
